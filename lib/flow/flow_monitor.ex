@@ -28,12 +28,16 @@ defmodule Flow.FlowMonitor do
   end
 
   def handle_info(:maybe_reset, %{last_pulse: last_pulse} = state) do
-    if Time.diff(Time.utc_now(), last_pulse, :second) > 10 do
-      upload_usage(state[:log_id], state[:pulses])
-      {:noreply, %{state | pulses: 0}}
-    else
-      {:noreply, state}
-    end
+    new_state =
+      if Time.diff(Time.utc_now(), last_pulse, :second) > 10 do
+        upload_usage(state[:log_id], state[:pulses])
+        %{state | pulses: 0}
+      else
+        state
+      end
+
+    schedule_checkin()
+    {:noreply, new_state}
   end
 
   defp setup_gpio(pin) do
@@ -51,6 +55,6 @@ defmodule Flow.FlowMonitor do
   defp upload_usage(log_id, pulses) do
     liters = pulses / @pulses_per_liter
     ml = trunc(liters * 1000)
-    Api.upload(log_id, ml)
+    if ml > 0, do: Api.upload(log_id, ml)
   end
 end
