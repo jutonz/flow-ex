@@ -12,8 +12,8 @@ defmodule Flow.FlowMonitor do
     do: GenServer.start_link(__MODULE__, :ok, debug: [:trace])
 
   def init(:ok) do
-    {:ok, sensor_gpio} = GPIO.open(@sensor_gpio, :input)
-    GPIO.set_pull_mode(sensor_gpio, :pullup)
+    {:ok, sensor_gpio} = GPIO.open(@sensor_gpio, :input, pull_mode: :pullup)
+    #GPIO.set_pull_mode(sensor_gpio, :pullup)
 
     int_opts = [suppress_glitches: false]
     GPIO.set_interrupts(sensor_gpio, :falling, int_opts)
