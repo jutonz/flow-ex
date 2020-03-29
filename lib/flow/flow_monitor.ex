@@ -4,16 +4,17 @@ defmodule Flow.FlowMonitor do
 
   @sensor_gpio 18
 
-  @ideal_pulses_per_liter 4380
-  @pulse_adjustor -575
-  @pulses_per_liter @ideal_pulses_per_liter + @pulse_adjustor
+  #@ideal_pulses_per_liter 4380
+  #@pulse_adjustor -575
+  #@pulses_per_liter @ideal_pulses_per_liter + @pulse_adjustor
 
   def start_link(args),
-    do: GenServer.start_link(__MODULE__, :ok, args)
+    do: GenServer.start_link(__MODULE__, :ok, debug: [:trace])
 
   def init(:ok) do
     {:ok, sensor_gpio} = GPIO.open(@sensor_gpio, :input)
-    GPIO.set_interrupts(sensor_gpio, :rising)
+    GPIO.set_pull_mode(sensor_gpio, :pullup)
+    GPIO.set_interrupts(sensor_gpio, :falling)
 
     {:ok, :no_state}
   end
