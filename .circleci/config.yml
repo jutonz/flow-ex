@@ -4,8 +4,6 @@ jobs:
     docker:
       - image: circleci/elixir:1.10
     working_directory: ~/repo
-    environment:
-    - FLOW_API_KEY: fake
     steps:
       - checkout
       - run:
@@ -17,7 +15,5 @@ jobs:
       - run: mix format --check-formatted
       - run:
           name: mix test
-          environment:
-          - MIX_ENV: test
           command: |
             mix test
