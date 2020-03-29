@@ -44,6 +44,7 @@ defmodule Flow.FlowMonitor do
     {:ok, gpio} = GPIO.open(pin, :input)
     GPIO.set_pull_mode(gpio, :pullup)
     GPIO.set_interrupts(gpio, :falling)
+    gpio
   end
 
   defp schedule_checkin,
