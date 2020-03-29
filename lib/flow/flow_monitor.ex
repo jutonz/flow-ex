@@ -18,6 +18,11 @@ defmodule Flow.FlowMonitor do
     int_opts = [suppress_glitches: false]
     GPIO.set_interrupts(sensor_gpio, :falling, int_opts)
 
-    {:ok, %{gpio: sensor_gpio}}
+    {:ok, %{gpio: sensor_gpio, pulses: 0}}
+  end
+
+  def handle_info({:circuits_gpio, _pin, timestamp, value}, state) do
+    IO.puts("pulse!")
+    {:noreply, %{state | pulses: state[:pulses] + 1}}
   end
 end
