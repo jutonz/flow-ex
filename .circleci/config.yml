@@ -4,6 +4,8 @@ jobs:
     docker:
       - image: circleci/elixir:1.10
     working_directory: ~/repo
+    environment:
+    - FLOW_API_KEY: fake
     steps:
       - checkout
       - run: mix deps.get
