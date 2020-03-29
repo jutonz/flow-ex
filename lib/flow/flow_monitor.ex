@@ -43,7 +43,7 @@ defmodule Flow.FlowMonitor do
   end
 
   defp schedule_checkin,
-    do: Process.send_after(self(), 1000, :maybe_reset)
+    do: Process.send_after(self(), :maybe_reset, 1000)
 
   @ideal_pulses_per_liter 4380
   @pulse_adjustor -575
