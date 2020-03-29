@@ -7,8 +7,6 @@ defmodule Flow.FlowMonitor do
     do: GenServer.start_link(__MODULE__, args, debug: [:trace])
 
   def init(%{pin: pin, log_id: log_id}) do
-    schedule_checkin()
-
     initial_state = %{
       gpio: setup_gpio(pin),
       log_id: log_id,
@@ -16,8 +14,11 @@ defmodule Flow.FlowMonitor do
       last_pulse: nil
     }
 
-    {:ok, initial_state}
+    {:ok, initial_state, {:continue, nil}}
   end
+
+  def handle_continue(nil, _state),
+    do: schedule_checkin()
 
   def handle_info({:circuits_gpio, _pin, _timestamp, _value}, state) do
     new_state =
