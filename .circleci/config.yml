@@ -15,4 +15,9 @@ jobs:
             mix local.rebar --force
             mix deps.get
       - run: mix format --check-formatted
-      - run: mix test
+      - run:
+          name: mix test
+          environment:
+          - MIX_ENV: test
+          command: |
+            mix test

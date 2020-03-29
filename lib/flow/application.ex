@@ -7,7 +7,7 @@ defmodule Flow.Application do
 
   def start(_type, _args) do
     children = [
-      {Flow.FlowMonitor, %{pin: 24, log_id: "f150cb6e-f0e0-4674-a5cc-a22b3fa3df28"}}
+      Flow.FlowSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
