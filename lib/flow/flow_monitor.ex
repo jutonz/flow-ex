@@ -12,7 +12,7 @@ defmodule Flow.FlowMonitor do
     initial_state = %{
       gpio: setup_gpio(pin),
       log_id: log_id,
-      pulses: 0
+      pulses: -1
     }
 
     {:ok, initial_state}
