@@ -23,7 +23,8 @@ defmodule Flow.MixProject do
   defp deps do
     [
       {:circuits_gpio, "~> 0.4"},
-      {:httpoison, "~> 1.6"}
+      {:httpoison, "~> 1.6"},
+      {:jason, "~> 1.2"}
     ]
   end
 end
