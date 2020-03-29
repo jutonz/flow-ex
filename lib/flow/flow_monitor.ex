@@ -30,7 +30,7 @@ defmodule Flow.FlowMonitor do
 
   def handle_info(:maybe_reset, %{last_pulse: last_pulse} = state) do
     new_state =
-      if Time.diff(Time.utc_now(), last_pulse, :second) > 10 do
+      if last_pulse && Time.diff(Time.utc_now(), last_pulse, :second) > 10 do
         upload_usage(state[:log_id], state[:pulses])
         %{state | pulses: 0}
       else
