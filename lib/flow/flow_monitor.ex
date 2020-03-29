@@ -14,8 +14,10 @@ defmodule Flow.FlowMonitor do
   def init(:ok) do
     {:ok, sensor_gpio} = GPIO.open(@sensor_gpio, :input)
     GPIO.set_pull_mode(sensor_gpio, :pullup)
-    GPIO.set_interrupts(sensor_gpio, :falling)
 
-    {:ok, :no_state}
+    int_opts = [suppress_glitches: false]
+    GPIO.set_interrupts(sensor_gpio, :falling, int_opts)
+
+    {:ok, %{gpio: sensor_gpio}}
   end
 end
