@@ -8,6 +8,11 @@ jobs:
     - FLOW_API_KEY: fake
     steps:
       - checkout
-      - run: mix deps.get
+      - run:
+          name: mix deps.get
+          command: |
+            mix local.hex --force
+            mix local.rebar --force
+            mix deps.get
       - run: mix format --check-formatted
       - run: mix test
