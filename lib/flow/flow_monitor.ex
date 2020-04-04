@@ -1,4 +1,5 @@
 defmodule Flow.FlowMonitor do
+  require Logger
   use GenServer
   alias Circuits.GPIO
   alias Flow.Api
@@ -25,6 +26,8 @@ defmodule Flow.FlowMonitor do
       state
       |> Map.put(:pulses, state[:pulses] + 1)
       |> Map.put(:last_pulse, Time.utc_now())
+
+    Logger.info("Pulse! Total: #{state[:pulses]}")
 
     {:noreply, new_state}
   end
@@ -58,6 +61,10 @@ defmodule Flow.FlowMonitor do
   defp upload_usage(log_id, pulses) do
     liters = pulses / @pulses_per_liter
     ml = trunc(liters * 1000)
-    if ml > 0, do: Api.upload(log_id, ml)
+
+    if ml > 0 do
+      Logger.info("Uploading usage of #{ml} ml...")
+      Api.upload(log_id, ml) |> IO.inspect()
+    end
   end
 end
