@@ -7,8 +7,7 @@ defmodule Flow.Application do
 
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Flow.Worker.start_link(arg)
-      # {Flow.Worker, arg}
+      Flow.FlowSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
