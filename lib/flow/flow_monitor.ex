@@ -39,7 +39,9 @@ defmodule Flow.FlowMonitor do
       |> Map.put(:pulses, state[:pulses] + 1)
       |> Map.put(:last_pulse, Time.utc_now())
 
-    Logger.info("Pulse! Total: #{state[:pulses]}")
+    pulses = state[:pulses]
+    ml = pulses_to_ml(pulses)
+    Logger.info("Pulse! Total: #{pulses}. Usage: #{ml} ml")
 
     {:noreply, new_state}
   end
@@ -68,16 +70,20 @@ defmodule Flow.FlowMonitor do
   defp schedule_checkin,
     do: Process.send_after(self(), :maybe_reset, 1000)
 
-  @ideal_pulses_per_liter 4380
-  @pulse_adjustor -575
-  @pulses_per_liter @ideal_pulses_per_liter + @pulse_adjustor
   defp upload_usage(log_id, pulses) do
-    liters = pulses / @pulses_per_liter
-    ml = trunc(liters * 1000)
+    ml = pulses_to_ml(pulses)
 
     if ml > 0 do
       Logger.info("Uploading usage of #{ml} ml...")
       Api.upload(log_id, ml) |> IO.inspect()
     end
+  end
+
+  @ideal_pulses_per_liter 4380
+  @pulse_adjustor -575
+  @pulses_per_liter @ideal_pulses_per_liter + @pulse_adjustor
+  defp pulses_to_ml(pulses) do
+    liters = pulses / @pulses_per_liter
+    trunc(liters * 1000)
   end
 end
