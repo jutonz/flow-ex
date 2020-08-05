@@ -22,7 +22,7 @@ defmodule Flow.FlowMonitor do
       gpio: setup_gpio(pin),
       log_id: log_id,
       pulses: 0,
-      last_pulse: nil
+      last_pulse_at: nil
     }
 
     {:ok, initial_state, {:continue, nil}}
@@ -34,10 +34,14 @@ defmodule Flow.FlowMonitor do
   end
 
   def handle_info({:circuits_gpio, _pin, _timestamp, _value}, state) do
+    if state[:pulses] == 0 do
+      Flow.Screen.wake()
+    end
+
     new_state =
       state
       |> Map.put(:pulses, state[:pulses] + 1)
-      |> Map.put(:last_pulse, Time.utc_now())
+      |> Map.put(:last_pulse_at, Time.utc_now())
 
     pulses = state[:pulses]
     ml = pulses_to_ml(pulses)
@@ -46,16 +50,26 @@ defmodule Flow.FlowMonitor do
     {:noreply, new_state}
   end
 
-  def handle_info(:maybe_reset, %{last_pulse: last_pulse} = state) do
+  def handle_info(:maybe_reset, state) do
+    pulses = state[:pulses]
+    last_pulse_at = state[:last_pulse_at]
+
     new_state =
-      if last_pulse && Time.diff(Time.utc_now(), last_pulse, :second) > 10 do
-        upload_usage(state[:log_id], state[:pulses])
-        %{state | pulses: 0}
-      else
-        state
+      cond do
+        pulses > 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 10 ->
+          upload_usage(state[:log_id], state[:pulses])
+          %{state | pulses: 0}
+
+        pulses == 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 15 ->
+          Flow.Screen.sleep()
+          state
+
+        true ->
+          state
       end
 
     schedule_checkin()
+
     {:noreply, new_state}
   end
 
@@ -75,7 +89,11 @@ defmodule Flow.FlowMonitor do
 
     if ml > 0 do
       Logger.info("Uploading usage of #{ml} ml...")
-      Api.upload(log_id, ml) |> IO.inspect()
+
+      case Api.upload(log_id, ml) do
+        %{status_code: 200} -> Logger.info("Successfully uploaded usage.")
+        response -> Logger.info("Failed to upload usage: #{inspect(response)}")
+      end
     end
   end
 
@@ -85,5 +103,9 @@ defmodule Flow.FlowMonitor do
   defp pulses_to_ml(pulses) do
     liters = pulses / @pulses_per_liter
     trunc(liters * 1000)
+  end
+
+  defp time_ago_in_seconds(time) do
+    Time.diff(Time.utc_now(), time, :second)
   end
 end
