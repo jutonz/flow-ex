@@ -46,6 +46,7 @@ defmodule Flow.FlowMonitor do
   end
 
   defp setup_gpio(pin) do
+    Logger.info("Setting up GPIO pin #{pin}")
     {:ok, gpio} = GPIO.open(pin, :input)
     GPIO.set_pull_mode(gpio, :pullup)
     GPIO.set_interrupts(gpio, :falling)
