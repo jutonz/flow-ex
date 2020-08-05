@@ -4,8 +4,18 @@ defmodule Flow.FlowMonitor do
   alias Circuits.GPIO
   alias Flow.Api
 
-  def start_link(args),
-    do: GenServer.start_link(__MODULE__, args, debug: [:trace])
+  @debug false
+
+  def start_link(args) do
+    genserver_opts =
+      if @debug do
+        [debug: [:trace]]
+      else
+        []
+      end
+
+    GenServer.start_link(__MODULE__, args, genserver_opts)
+  end
 
   def init(%{pin: pin, log_id: log_id}) do
     initial_state = %{
@@ -18,8 +28,10 @@ defmodule Flow.FlowMonitor do
     {:ok, initial_state, {:continue, nil}}
   end
 
-  def handle_continue(nil, _state),
-    do: schedule_checkin()
+  def handle_continue(nil, state) do
+    schedule_checkin()
+    {:noreply, state}
+  end
 
   def handle_info({:circuits_gpio, _pin, _timestamp, _value}, state) do
     new_state =

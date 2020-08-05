@@ -7,12 +7,12 @@ import requests
 API_ENDPOINT = "https://app.jutonz.com/api/water-logs/f150cb6e-f0e0-4674-a5cc-a22b3fa3df28/entries"
 AUTH_TOKEN = "123"
 
-FLOW_SENSOR = 18
+FLOW_SENSOR = 24
 IDEAL_PULSES_PER_LITER = 4380
 PULSE_ADJUSTOR = -575
 PULSES_PER_LITER = IDEAL_PULSES_PER_LITER + PULSE_ADJUSTOR
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(FLOW_SENSOR, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 global totalPulses

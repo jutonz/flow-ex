@@ -3,7 +3,10 @@ defmodule Flow.Api do
     HTTPoison.post!(
       log_entries_path(log_id),
       Jason.encode!(%{"ml" => ml}),
-      [{"Authorization", "Bearer #{api_token()}"}]
+      [
+        {"authorization", "Bearer #{api_token()}"},
+        {"content-type", "application/json"}
+      ]
     )
   end
 
