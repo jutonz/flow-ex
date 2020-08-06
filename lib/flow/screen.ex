@@ -34,7 +34,7 @@ defmodule Flow.Screen do
     new_state =
       if !awake || Time.diff(Time.utc_now(), last_wake_at, :second) > 60 do
         Logger.info("Waking screen")
-        System.cmd("xset", ~w[dpms force on], env: [{"DISPLAY", ":0"}])
+        provider().wake()
         %{state | awake: true, last_wake_at: Time.utc_now()}
       else
         state
@@ -54,12 +54,16 @@ defmodule Flow.Screen do
     new_state =
       if awake || Time.diff(now, last_sleep_at, :second) > 60 do
         Logger.info("Sleeping screen")
-        System.cmd("xset", ~w[dpms force off], env: [{"DISPLAY", ":0"}])
+        provider().sleep()
         %{state | awake: false, last_sleep_at: now}
       else
         state
       end
 
     {:noreply, new_state}
+  end
+
+  defp provider do
+    Application.fetch_env!(:flow, :screen_provider)
   end
 end
