@@ -24,7 +24,9 @@ defmodule Flow.MixProject do
     [
       {:circuits_gpio, "~> 0.4"},
       {:httpoison, "~> 1.6"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
+      {:phoenix_gen_socket_client, "~> 3.0.0"},
+      {:websocket_client, "~> 1.2"}
     ]
   end
 end
