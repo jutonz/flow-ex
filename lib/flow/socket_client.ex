@@ -2,14 +2,13 @@ defmodule Flow.SocketClient do
   require Logger
   alias Phoenix.Channels.GenSocketClient
   @behaviour GenSocketClient
-
   def start_link do
     GenSocketClient.start_link(
       __MODULE__,
       Phoenix.Channels.GenSocketClient.Transport.WebSocketClient,
       socket_url(),
       [],
-      [name: __MODULE__]
+      name: __MODULE__
     )
   end
 
@@ -33,7 +32,7 @@ defmodule Flow.SocketClient do
     {:ok, state}
   end
 
-  def handle_disconnected(reason, state) do
+  def handle_disconnected(_reason, state) do
     Logger.info("Disconnected: #{inspect(state)}")
     Process.send_after(self(), :connect, :timer.seconds(5))
     {:ok, state}
@@ -62,7 +61,7 @@ defmodule Flow.SocketClient do
     {:ok, state}
   end
 
-  def handle_info(:connect, transport, state) do
+  def handle_info(:connect, _transport, state) do
     Logger.info("Connecting")
     {:connect, state}
   end
@@ -85,6 +84,16 @@ defmodule Flow.SocketClient do
 
   def handle_reply(topic, _ref, payload, _transport, state) do
     Logger.info("Received reply to on topic #{topic}: #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  def handle_message(topic, event, payload, _transport, state) do
+    Logger.warn("Unkonwn message on topic #{topic}: #{event} #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  def handle_call(message, _from, _transport, state) do
+    Logger.warn("Received unknown handle_call with message #{inspect(message)}")
     {:ok, state}
   end
 
