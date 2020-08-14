@@ -1,4 +1,4 @@
-defmodule Flow.SocketClient do
+defmodule Flow.Backend do
   require Logger
   alias Phoenix.Channels.GenSocketClient
   @behaviour GenSocketClient

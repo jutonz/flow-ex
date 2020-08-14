@@ -11,7 +11,7 @@ defmodule Flow.Application do
     children = [
       Flow.FlowSupervisor,
       Flow.Screen,
-      worker(Flow.SocketClient, [])
+      worker(Flow.Backend, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
