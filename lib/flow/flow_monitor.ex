@@ -57,11 +57,11 @@ defmodule Flow.FlowMonitor do
 
     new_state =
       cond do
-        pulses > 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 10 ->
+        pulses > 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 3 ->
           upload_usage(state[:log_id], state[:pulses])
           %{state | pulses: 0}
 
-        pulses == 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 15 ->
+        pulses == 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 10 ->
           Flow.Screen.sleep()
           state
 
