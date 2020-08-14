@@ -2,11 +2,7 @@ defmodule Flow.FlowMonitor do
   require Logger
   use GenServer
   alias Circuits.GPIO
-
-  alias Flow.{
-    Api,
-    Backend
-  }
+  alias Flow.Backend
 
   @debug false
 
