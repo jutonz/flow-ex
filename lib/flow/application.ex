@@ -7,8 +7,9 @@ defmodule Flow.Application do
 
   def start(_type, _args) do
     children = [
-      Flow.FlowSupervisor,
-      Flow.Screen
+      # Flow.FlowSupervisor,
+      # Flow.Screen,
+      Flow.Scale
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
