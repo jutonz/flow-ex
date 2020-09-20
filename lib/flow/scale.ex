@@ -11,7 +11,8 @@ defmodule Flow.Scale do
     state = %{
       dt_pin: 29,
       sck_pin: 31,
-      gain: 1
+      gain: 1,
+      reference_unit: 428
     }
 
     {:ok, state, {:continue, nil}}
@@ -25,9 +26,32 @@ defmodule Flow.Scale do
 
     reset(new_state[:sck_gpio])
 
+    schedule_read()
+
     # Process.send(:set_gain)
 
     {:noreply, state}
+  end
+
+  def handle_info(:read, state) do
+    Logger.info("reading")
+    read_next_bit(state)
+    # value = read(state) / state[:reference_unit]
+    {:noreply, state}
+  end
+
+  defp read(state) do
+    first = read_next_byte(state)
+  end
+
+  defp read_next_byte(state) do
+  end
+
+  defp read_next_bit(state) do
+    GPIO.write(state[:sck_gpio], 1)
+    GPIO.write(state[:sck_gpio], 0)
+    value = GPIO.read(state[:sck_dt])
+    Logger.inspect("read bit: #{value}")
   end
 
   # def handle_info(:set_gain, %{gain: gain} = state) do
@@ -71,5 +95,9 @@ defmodule Flow.Scale do
     GPIO.write(sck_gpio, 0)
     # wait 100us for startup
     Process.sleep(1)
+  end
+
+  defp schedule_read do
+    Process.send_after(__MODULE__, :read, 1000)
   end
 end
