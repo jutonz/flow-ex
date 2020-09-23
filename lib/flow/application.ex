@@ -6,9 +6,12 @@ defmodule Flow.Application do
   use Application
 
   def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
     children = [
       Flow.FlowSupervisor,
-      Flow.Screen
+      Flow.Screen,
+      worker(Flow.Backend, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

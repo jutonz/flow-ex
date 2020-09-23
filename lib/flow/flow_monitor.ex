@@ -2,7 +2,7 @@ defmodule Flow.FlowMonitor do
   require Logger
   use GenServer
   alias Circuits.GPIO
-  alias Flow.Api
+  alias Flow.Backend
 
   @debug false
 
@@ -45,6 +45,7 @@ defmodule Flow.FlowMonitor do
 
     pulses = state[:pulses]
     ml = pulses_to_ml(pulses)
+    Backend.set_ml(state[:log_id], ml)
     Logger.info("Pulse! Total: #{pulses}. Usage: #{ml} ml")
 
     {:noreply, new_state}
@@ -56,11 +57,11 @@ defmodule Flow.FlowMonitor do
 
     new_state =
       cond do
-        pulses > 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 10 ->
+        pulses > 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 3 ->
           upload_usage(state[:log_id], state[:pulses])
           %{state | pulses: 0}
 
-        pulses == 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 15 ->
+        pulses == 0 && last_pulse_at && time_ago_in_seconds(last_pulse_at) > 10 ->
           Flow.Screen.sleep()
           state
 
@@ -89,11 +90,7 @@ defmodule Flow.FlowMonitor do
 
     if ml > 0 do
       Logger.info("Uploading usage of #{ml} ml...")
-
-      case Api.upload(log_id, ml) do
-        %{status_code: 200} -> Logger.info("Successfully uploaded usage.")
-        response -> Logger.info("Failed to upload usage: #{inspect(response)}")
-      end
+      Backend.commit(log_id, ml)
     end
   end
 
