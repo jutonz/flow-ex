@@ -2,14 +2,20 @@ defmodule Flow.Backend do
   require Logger
   alias Phoenix.Channels.GenSocketClient
   @behaviour GenSocketClient
+
   def start_link do
-    GenSocketClient.start_link(
-      __MODULE__,
-      Phoenix.Channels.GenSocketClient.Transport.WebSocketClient,
-      socket_url(),
-      [],
-      name: __MODULE__
-    )
+    if socket_url() do
+      GenSocketClient.start_link(
+        __MODULE__,
+        Phoenix.Channels.GenSocketClient.Transport.WebSocketClient,
+        socket_url(),
+        [],
+        name: __MODULE__
+      )
+    else
+      Logger.info("Skipping websocket connection becuase no socket_url was configured")
+      :ignore
+    end
   end
 
   def init(url) do

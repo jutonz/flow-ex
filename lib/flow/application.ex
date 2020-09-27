@@ -11,6 +11,7 @@ defmodule Flow.Application do
     children = [
       Flow.FlowSupervisor,
       Flow.Screen,
+      Flow.Scale,
       worker(Flow.Backend, [])
     ]
 

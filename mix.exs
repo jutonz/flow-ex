@@ -23,6 +23,7 @@ defmodule Flow.MixProject do
   defp deps do
     [
       {:circuits_gpio, "~> 0.4"},
+      {:erlport, "~> 0.10.1"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
       {:phoenix_gen_socket_client, "~> 3.0.0"},
