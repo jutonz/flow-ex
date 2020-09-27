@@ -12,7 +12,9 @@ defmodule Flow.Scale do
   end
 
   def handle_continue(nil, state) do
-    {:ok, py_pid} = :python.start()
+    {:ok, py_pid} = :python.start([
+      {:python_path, ["/home/pi/code/hx711py"]}
+    ])
     send(self(), :check)
     {:noreply, Map.put(state, :py_pid, py_pid)}
   end
