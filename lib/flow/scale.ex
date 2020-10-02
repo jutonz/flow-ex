@@ -12,9 +12,9 @@ defmodule Flow.Scale do
   end
 
   def handle_continue(nil, state) do
-    {:ok, py_pid} = :python.start([
-      python_path: to_char_list("/home/pi/code/jutonz/flow-ex/vendor")
-    ])
+    {:ok, py_pid} =
+      :python.start(python_path: to_char_list("/home/pi/code/jutonz/flow-ex/vendor"))
+
     setup_scale(py_pid)
     send(self(), :get_measurement)
     {:noreply, Map.put(state, :py_pid, py_pid)}
