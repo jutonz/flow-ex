@@ -34,15 +34,3 @@ def teardown():
 
 def get_measurement():
     return scale.get_measurement()
-
-
-# def start(dest):
-    # while True:
-        # time.sleep(0.5)
-        # cast(dest, (Atom("measurement"), 123))
-    # scale = HX711(5, 6)
-    # scale.set_reading_format("MSB", "MSB")
-    # scale.set_reference_unit(428)
-    # scale.reset()
-    # scale.tare()
-
