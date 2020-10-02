@@ -1,4 +1,5 @@
 defmodule Flow.Scale do
+  alias Flow.Backend
   require Logger
   use GenServer
 
@@ -6,8 +7,8 @@ defmodule Flow.Scale do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
 
-  def init(_args) do
-    initial_state = %{}
+  def init(%{log_id: log_id}) do
+    initial_state = %{log_id: log_id}
     {:ok, initial_state, {:continue, nil}}
   end
 
@@ -20,10 +21,11 @@ defmodule Flow.Scale do
     {:noreply, Map.put(state, :py_pid, py_pid)}
   end
 
-  def handle_info(:get_measurement, %{py_pid: pid} = state) do
+  def handle_info(:get_measurement, %{py_pid: pid, log_id: log_id} = state) do
     value = get_measurement(pid)
     value = max(0, value)
-    log("Got measurement: #{value}")
+    if value > 0, do: log("Got measurement: #{value}")
+    Backend.weight(log_id, value)
     schedule_measurement()
     {:noreply, state}
   end

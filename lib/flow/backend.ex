@@ -32,6 +32,10 @@ defmodule Flow.Backend do
     Process.send(__MODULE__, {:commit, log_id, ml}, [])
   end
 
+  def weight(log_id, g) do
+    Process.send(__MODULE__, {:weight, log_id, g}, [])
+  end
+
   def handle_connected(_transport, %{topics: topics} = state) do
     Logger.info("Connected")
     Enum.each(topics, fn topic -> Process.send(self(), {:join, topic}, []) end)
@@ -84,6 +88,14 @@ defmodule Flow.Backend do
     topic = topic_for_log_id(log_id)
     event = "commit"
     payload = %{"ml" => ml}
+    GenSocketClient.push(transport, topic, event, payload)
+    {:ok, state}
+  end
+
+  def handle_info({:weight, log_id, g}, transport, state) do
+    topic = topic_for_log_id(log_id)
+    event = "commit"
+    payload = %{"g" => g}
     GenSocketClient.push(transport, topic, event, payload)
     {:ok, state}
   end

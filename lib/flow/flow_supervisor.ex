@@ -6,7 +6,11 @@ defmodule Flow.FlowSupervisor do
     do: Supervisor.start_link(__MODULE__, :ok)
 
   def init(:ok) do
-    children = Enum.map(monitors(), fn args -> {Flow.FlowMonitor, args} end)
+    children =
+      Enum.map(monitors(), fn args ->
+        [{Flow.FlowMonitor, args}, {Flow.Scale, args}]
+      end)
+
     Supervisor.init(children, strategy: :one_for_one)
   end
 
