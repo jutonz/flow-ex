@@ -24,7 +24,7 @@ defmodule Flow.Scale do
   def handle_info(:get_measurement, %{py_pid: pid, log_id: log_id} = state) do
     value = get_measurement(pid)
     value = max(0, value)
-    if value > 0, do: log("Got measurement: #{value}")
+    if value > 2, do: log("Got measurement: #{value}")
     Backend.weight(log_id, value)
     schedule_measurement()
     {:noreply, state}
