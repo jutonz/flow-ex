@@ -94,7 +94,7 @@ defmodule Flow.Backend do
 
   def handle_info({:weight, log_id, g}, transport, state) do
     topic = topic_for_log_id(log_id)
-    event = "commit"
+    event = "weight"
     payload = %{"g" => g}
     GenSocketClient.push(transport, topic, event, payload)
     {:ok, state}

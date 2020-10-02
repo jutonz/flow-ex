@@ -7,7 +7,7 @@ defmodule Flow.FlowSupervisor do
 
   def init(:ok) do
     children =
-      Enum.map(monitors(), fn args ->
+      Enum.flat_map(monitors(), fn args ->
         [{Flow.FlowMonitor, args}, {Flow.Scale, args}]
       end)
 
