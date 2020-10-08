@@ -34,3 +34,6 @@ def teardown():
 
 def get_measurement():
     return scale.get_measurement()
+
+def tare():
+    scale.tare()

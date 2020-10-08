@@ -21,6 +21,15 @@ defmodule Flow.Scale do
     {:noreply, Map.put(state, :py_pid, py_pid)}
   end
 
+  def tare do
+    GenServer.cast(__MODULE__, :tare)
+  end
+
+  def handle_cast(:tare, %{py_pid: pid} = state) do
+    :python.call(pid, :scale, :tare, [])
+    {:noreply, state}
+  end
+
   def handle_info(:get_measurement, %{py_pid: pid, log_id: log_id} = state) do
     value = get_measurement(pid)
     value = max(0, value)
