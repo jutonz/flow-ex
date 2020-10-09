@@ -105,6 +105,12 @@ defmodule Flow.Backend do
     {:ok, state}
   end
 
+  def handle_message(topic, "tare", _payload, _transport, state) do
+    Logger.info("Received tare event on #{topic}")
+    Flow.Scale.tare()
+    {:ok, state}
+  end
+
   def handle_message(topic, event, payload, _transport, state) do
     Logger.warn("Unkonwn message on topic #{topic}: #{event} #{inspect(payload)}")
     {:ok, state}

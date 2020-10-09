@@ -19,6 +19,9 @@ class Scale:
         self.scale.power_up()
         return weight
 
+    def tare(self):
+        self.scale.tare()
+
 class Scale2:
     def get_measurement(self):
         return 123
@@ -34,3 +37,6 @@ def teardown():
 
 def get_measurement():
     return scale.get_measurement()
+
+def tare():
+    scale.tare()
