@@ -106,7 +106,7 @@ defmodule Flow.Backend do
   end
 
   def handle_message(topic, "tare", _payload, _transport, state) do
-    Logger.info("Received tare event")
+    Logger.info("Received tare event on #{topic}")
     Flow.Scale.tare()
     {:ok, state}
   end

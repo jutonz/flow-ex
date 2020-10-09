@@ -22,11 +22,13 @@ defmodule Flow.Scale do
   end
 
   def tare do
+    Logger.info("Starting tare...")
     GenServer.cast(__MODULE__, :tare)
   end
 
   def handle_cast(:tare, %{py_pid: pid} = state) do
     :python.call(pid, :scale, :tare, [])
+    Logger.info("Tare complete")
     {:noreply, state}
   end
 
