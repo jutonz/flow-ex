@@ -1,12 +1,13 @@
 defmodule Flow.HumidityMonitor do
   require Logger
   use GenServer
+
   alias Flow.{
     Awair,
     HumidityManager
   }
 
-  @debug true
+  @debug false
 
   def start_link(args) do
     genserver_opts =
@@ -23,6 +24,7 @@ defmodule Flow.HumidityMonitor do
     initial_state = %{
       awair_ip: awair_ip()
     }
+
     {:ok, initial_state, {:continue, nil}}
   end
 

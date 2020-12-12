@@ -17,21 +17,20 @@ defmodule Flow.Awair do
   end
 
   @type response ::
-    {:ok, Flow.Awair.Response.t()} |
-    {:error, :bad_response} |
-    {:error, {:invalid_json_response, String.t()}}
+          {:ok, Flow.Awair.Response.t()}
+          | {:error, :bad_response}
+          | {:error, {:invalid_json_response, String.t()}}
 
-  @spec parse_response(
-    {:ok, Finch.Response.t()} | {:error, Mint.Types.error()}
-  ) :: response()
+  @spec parse_response({:ok, Finch.Response.t()} | {:error, Mint.Types.error()}) :: response()
 
   defp parse_response({:ok, %Finch.Response{} = response}) do
     case Jason.decode(response.body) do
       {:ok, data} ->
-        {:ok, %Flow.Awair.Response{
-          humidity: data["humid"],
-          raw_response: response
-        }}
+        {:ok,
+         %Flow.Awair.Response{
+           humidity: data["humid"],
+           raw_response: response
+         }}
 
       {:error, _reason} ->
         {:error, {:invalid_json_response, response.body}}
@@ -45,6 +44,6 @@ defmodule Flow.Awair do
 
   @timeout 5_000
   defp request(request) do
-    Finch.request(request, FlowFinch, [receive_timeout: @timeout])
+    Finch.request(request, FlowFinch, receive_timeout: @timeout)
   end
 end

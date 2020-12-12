@@ -16,8 +16,10 @@ defmodule Flow.MixProject do
     [
       extra_applications: [
         :logger,
-        :inets, # For http requests to awair/ifttt
-        :ssl # For https requests to ifttt
+        # For http requests to awair/ifttt
+        :inets,
+        # For https requests to ifttt
+        :ssl
       ],
       mod: {Flow.Application, []}
     ]

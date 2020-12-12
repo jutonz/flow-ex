@@ -1,24 +1,35 @@
 defmodule Flow.HumidityManager do
   require Logger
   use GenServer
+  alias Flow.IFTTT
 
-  @debug true
+  @debug false
 
   def start_link(args) do
-    genserver_opts =
-      if @debug do
-        [debug: [:trace], name: __MODULE__]
-      else
-        []
-      end
+    if config(:mode) == :humidify do
+      genserver_opts =
+        if @debug do
+          [debug: [:trace], name: __MODULE__]
+        else
+          [name: __MODULE__]
+        end
 
-    GenServer.start_link(__MODULE__, args, genserver_opts)
+      GenServer.start_link(__MODULE__, args, genserver_opts)
+    else
+      Logger.info(
+        "Not starting HumidityManager because humidifier mode was" <>
+          " not :humidify (was #{inspect(config(:mode))} instead)"
+      )
+
+      :ignore
+    end
   end
 
   def init(_args) do
     initial_state = %{
       last_adjustment_at: nil
     }
+
     {:ok, initial_state}
   end
 
@@ -53,6 +64,8 @@ defmodule Flow.HumidityManager do
   def handle_cast(:humidifier_on, state) do
     Logger.info("turning humidifier on")
 
+    :ok = IFTTT.trigger("humidifier_on")
+
     new_state = %{
       last_adjustment_at: now()
     }
@@ -62,6 +75,8 @@ defmodule Flow.HumidityManager do
 
   def handle_cast(:humidifier_off, state) do
     Logger.info("turning humidifier off")
+
+    :ok = IFTTT.trigger("humidifier_off")
 
     new_state = %{
       last_adjustment_at: now()
@@ -73,8 +88,8 @@ defmodule Flow.HumidityManager do
   @spec adjustment(float()) :: :humidifier_on | :humidifier_off | :nothing
   defp adjustment(value) do
     cond do
-      value < min_level() -> :humidifier_on
-      value > max_level() -> :humidifier_off
+      value < config(:min_level) -> :humidifier_on
+      value > config(:max_level) -> :humidifier_off
       true -> :nothing
     end
   end
@@ -85,7 +100,7 @@ defmodule Flow.HumidityManager do
 
   defp cooldown_elapsed?(state) do
     last_adjustment_at = state[:last_adjustment_at]
-    cooldown_seconds = adjustment_cooldown() * 60
+    cooldown_seconds = config(:adjustment_cooldown) * 60
     cooldown_expires_at = DateTime.add(last_adjustment_at, cooldown_seconds, :second)
 
     DateTime.compare(cooldown_expires_at, now()) == :lt
@@ -96,15 +111,7 @@ defmodule Flow.HumidityManager do
     DateTime.now!(@zone)
   end
 
-  defp adjustment_cooldown do
-    Application.fetch_env!(:flow, :humidity)[:adjustment_cooldown]
-  end
-
-  defp min_level do
-    Application.fetch_env!(:flow, :humidity)[:min_level]
-  end
-
-  defp max_level do
-    Application.fetch_env!(:flow, :humidity)[:min_level]
+  defp config(key) do
+    Application.fetch_env!(:flow, :humidity)[key]
   end
 end
