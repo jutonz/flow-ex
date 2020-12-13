@@ -8,8 +8,12 @@ defmodule Flow.Scale do
   end
 
   def init(%{log_id: log_id}) do
-    initial_state = %{log_id: log_id}
-    {:ok, initial_state, {:continue, nil}}
+    if disabled?() do
+      :ignore
+    else
+      initial_state = %{log_id: log_id}
+      {:ok, initial_state, {:continue, nil}}
+    end
   end
 
   def handle_continue(nil, state) do
@@ -67,5 +71,9 @@ defmodule Flow.Scale do
 
   defp log(message) do
     Logger.info("[#{__MODULE__}] #{message}")
+  end
+
+  defp disabled? do
+    Application.fetch_env!(:flow, :scale)[:disabled] == true
   end
 end

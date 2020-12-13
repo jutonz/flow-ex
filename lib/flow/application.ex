@@ -10,8 +10,11 @@ defmodule Flow.Application do
 
     children = [
       Flow.FlowSupervisor,
+      Flow.HumidityManager,
+      Flow.HumidityMonitor,
       Flow.Screen,
-      worker(Flow.Backend, [])
+      worker(Flow.Backend, []),
+      {Finch, name: FlowFinch}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

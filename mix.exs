@@ -14,7 +14,13 @@ defmodule Flow.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [
+        :logger,
+        # For http requests to awair/ifttt
+        :inets,
+        # For https requests to ifttt
+        :ssl
+      ],
       mod: {Flow.Application, []}
     ]
   end
@@ -24,6 +30,7 @@ defmodule Flow.MixProject do
     [
       {:circuits_gpio, "~> 0.4"},
       {:erlport, "~> 0.10.1"},
+      {:finch, "~> 0.5.2"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
       {:phoenix_gen_socket_client, "~> 3.0.0"},
