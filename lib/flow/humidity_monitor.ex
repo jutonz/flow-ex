@@ -40,7 +40,7 @@ defmodule Flow.HumidityMonitor do
     {:noreply, state}
   end
 
-  @check_every 5_000
+  @check_every 60_000
   defp schedule_checkin do
     Process.send_after(self(), :check, @check_every)
   end
