@@ -1,3 +1,5 @@
 import Config
 
-config :flow, monitors: []
+config :flow,
+  monitors: [],
+  humidity: []
