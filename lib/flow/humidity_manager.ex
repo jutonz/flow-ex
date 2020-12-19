@@ -87,10 +87,11 @@ defmodule Flow.HumidityManager do
 
   @spec adjustment(float()) :: :humidifier_on | :humidifier_off | :nothing
   defp adjustment(value) do
+    target = config(:target_humidity)
+
     cond do
-      value < config(:min_level) -> :humidifier_on
-      value > config(:max_level) -> :humidifier_off
-      true -> :nothing
+      value < target -> :humidifier_on
+      true -> :humidifier_off
     end
   end
 
