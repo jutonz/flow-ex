@@ -101,7 +101,7 @@ defmodule Flow.HumidityManager do
 
   defp cooldown_elapsed?(state) do
     last_adjustment_at = state[:last_adjustment_at]
-    cooldown_seconds = config(:adjustment_cooldown) * 60
+    cooldown_seconds = config(:adjustment_cooldown_minutes) * 60
     cooldown_expires_at = DateTime.add(last_adjustment_at, cooldown_seconds, :second)
 
     DateTime.compare(cooldown_expires_at, now()) == :lt
