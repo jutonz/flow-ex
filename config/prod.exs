@@ -12,8 +12,8 @@ config :flow,
   socket_url: "wss://app.jutonz.com/socket/websocket",
   humidity: [
     mode: :humidify,
-    min_level: 35,
-    max_level: 40,
+    min_level: 40,
+    max_level: 50,
     adjustment_cooldown: 15,
     awair_ip: "192.168.1.189",
     ifttt_key: System.fetch_env!("IFTTT_KEY")
