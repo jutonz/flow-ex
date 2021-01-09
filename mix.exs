@@ -33,8 +33,8 @@ defmodule Flow.MixProject do
       {:finch, "~> 0.5.2"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
-      {:phoenix_gen_socket_client, "~> 3.0.0"},
-      {:websocket_client, "~> 1.2"}
+      {:phoenix_gen_socket_client, "~> 3.2.1"},
+      {:websocket_client, "~> 1.4.2"}
     ]
   end
 end
