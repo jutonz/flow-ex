@@ -19,3 +19,5 @@ config :flow,
   ]
 
 config :logger, level: :debug
+
+config :sentry, dsn: System.fetch_env!("SENTRY_DSN")

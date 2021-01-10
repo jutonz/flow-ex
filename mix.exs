@@ -31,9 +31,11 @@ defmodule Flow.MixProject do
       {:circuits_gpio, "~> 0.4"},
       {:erlport, "~> 0.10.1"},
       {:finch, "~> 0.5.2"},
+      {:hackney, "~> 1.8"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
       {:phoenix_gen_socket_client, "~> 3.2.1"},
+      {:sentry, "8.0.0"},
       {:websocket_client, "~> 1.4.2"}
     ]
   end

@@ -11,6 +11,6 @@ config :flow,
     # mode: :humidify,
     target_humidity: 40,
     adjustment_cooldown_minutes: 15,
-    awair_ip: "192.168.1.189"
-    # ifttt_key: System.fetch_env!("IFTTT_KEY")
+    awair_ip: "192.168.1.189",
+    ifttt_key: System.get_env("IFTTT_KEY")
   ]
