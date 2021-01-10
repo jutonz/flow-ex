@@ -30,7 +30,7 @@ defmodule Flow.MixProject do
     [
       {:circuits_gpio, "~> 0.4"},
       {:erlport, "~> 0.10.1"},
-      {:finch, "~> 0.5.2"},
+      {:finch, "~> 0.6.0"},
       {:hackney, "~> 1.8"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
