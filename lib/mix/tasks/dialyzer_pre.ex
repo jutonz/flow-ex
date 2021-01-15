@@ -10,4 +10,3 @@ defmodule Mix.Tasks.DialyzerPre do
     IO.puts("Made #{@dir} directory.")
   end
 end
-

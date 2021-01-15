@@ -123,9 +123,11 @@ defmodule Flow.Backend do
 
   defp token do
     token = Application.fetch_env!(:flow, :api_key)
+
     unless token do
       Logger.warn("flow.api_key is not configured. websocket auth will probably fail")
     end
+
     token
   end
 
