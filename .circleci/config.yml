@@ -7,10 +7,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        name: Restore PLT's
-        keys:
-        - v3-plts-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}
-        - v3-plts-{{ checksum ".tool-versions" }}-
+          name: Restore PLT's
+          keys:
+          - v3-plts-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}
+          - v3-plts-{{ checksum ".tool-versions" }}-
       - run:
           name: mix deps.get
           command: |
