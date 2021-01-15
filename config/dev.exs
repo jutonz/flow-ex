@@ -7,6 +7,8 @@ config :flow,
   scale: [
     disabled: true
   ],
+  # socket_url: "ws://localhost:4000/socket/websocket",
+  # api_key: "",
   humidity: [
     # mode: :humidify,
     target_humidity: 40,

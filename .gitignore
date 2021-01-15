@@ -23,3 +23,6 @@ erl_crash.dump
 flow-*.tar
 
 *.pyc
+
+# Ignore dialyzer PLT files
+_plts/

@@ -19,7 +19,7 @@ defmodule Flow.Backend do
   end
 
   def init(url) do
-    query_params = [token: token()]
+    query_params = [{"token", token()}]
     initial_state = %{topics: initial_topics()}
     {:connect, url, query_params, initial_state}
   end
@@ -118,11 +118,17 @@ defmodule Flow.Backend do
 
   def handle_call(message, _from, _transport, state) do
     Logger.warn("Received unknown handle_call with message #{inspect(message)}")
-    {:ok, state}
+    {:noreply, state}
   end
 
   defp token do
-    Application.fetch_env!(:flow, :api_key)
+    token = Application.fetch_env!(:flow, :api_key)
+
+    unless token do
+      Logger.warn("flow.api_key is not configured. websocket auth will probably fail")
+    end
+
+    token
   end
 
   defp socket_url do

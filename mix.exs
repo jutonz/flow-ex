@@ -7,7 +7,13 @@ defmodule Flow.MixProject do
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_add_apps: ~w[mix]a,
+        plt_core_path: "_plts",
+        plt_file: {:no_warn, "_plts/app.plt"}
+      ],
+      aliases: aliases()
     ]
   end
 
@@ -29,6 +35,7 @@ defmodule Flow.MixProject do
   defp deps do
     [
       {:circuits_gpio, "~> 0.4"},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:erlport, "~> 0.10.1"},
       {:finch, "~> 0.6.0"},
       {:hackney, "~> 1.8"},
@@ -37,6 +44,12 @@ defmodule Flow.MixProject do
       {:phoenix_gen_socket_client, "~> 3.2.1"},
       {:sentry, "8.0.4"},
       {:websocket_client, "~> 1.4.2"}
+    ]
+  end
+
+  def aliases do
+    [
+      dialyzer: ["dialyzer_pre", "dialyzer"]
     ]
   end
 end

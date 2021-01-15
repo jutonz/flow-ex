@@ -2,10 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/elixir:1.10
+      - image: cimg/elixir:1.10
     working_directory: ~/repo
     steps:
       - checkout
+      - restore_cache:
+          name: Restore PLT's
+          keys:
+          - v3-plts-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}
+          - v3-plts-{{ checksum ".tool-versions" }}-
       - run:
           name: mix deps.get
           command: |
@@ -13,7 +18,15 @@ jobs:
             mix local.rebar --force
             mix deps.get
       - run: mix format --check-formatted
+      - run: MIX_ENV=test mix compile --warnings-as-errors
       - run:
           name: mix test
           command: |
             mix test
+      - run:
+          name: Build PLT's
+          command: mix do dialyzer_pre, dialyzer.build
+      - save_cache:
+          key: v1-plts-{{ checksum ".tool-versions" }}-{{ checksum "mix.lock" }}
+          paths:
+          - _plts
