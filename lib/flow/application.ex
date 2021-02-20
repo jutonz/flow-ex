@@ -9,12 +9,13 @@ defmodule Flow.Application do
     import Supervisor.Spec, warn: false
 
     children = [
+      {Finch, name: FlowFinch},
+      Flow.DomainUpdater,
       Flow.FlowSupervisor,
       Flow.HumidityManager,
       Flow.HumidityMonitor,
       Flow.Screen,
-      worker(Flow.Backend, []),
-      {Finch, name: FlowFinch}
+      worker(Flow.Backend, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -34,8 +34,14 @@ defmodule Flow.HumidityMonitor do
   end
 
   def handle_info(:check, %{awair_ip: ip} = state) do
-    {:ok, humidity} = Awair.humidity(ip)
-    HumidityManager.humidity_callback(humidity)
+    case Awair.humidity(ip) do
+      {:ok, humidity} ->
+        HumidityManager.humidity_callback(humidity)
+
+      error ->
+        Logger.warn("Received bad response from Awair: #{inspect(error)}")
+    end
+
     schedule_checkin()
     {:noreply, state}
   end
