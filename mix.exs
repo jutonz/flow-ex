@@ -6,6 +6,7 @@ defmodule Flow.MixProject do
       app: :flow,
       version: "0.1.0",
       elixir: "~> 1.10",
+      elixirc_paths: elixirc_paths(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: [
@@ -45,6 +46,10 @@ defmodule Flow.MixProject do
       {:sentry, "8.0.4"},
       {:websocket_client, "~> 1.4.2"}
     ]
+  end
+
+  def elixirc_paths do
+    ~w[lib vendor test]
   end
 
   def aliases do
