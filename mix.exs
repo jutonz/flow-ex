@@ -41,7 +41,7 @@ defmodule Flow.MixProject do
       {:hackney, "~> 1.8"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
-      {:phoenix_gen_socket_client, "~> 3.2.1"},
+      {:phoenix_gen_socket_client, "~> 4.0.0"},
       {:sentry, "8.0.5"},
       {:websocket_client, "~> 1.4.2"}
     ]
