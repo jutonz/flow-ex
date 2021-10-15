@@ -37,7 +37,7 @@ defmodule Flow.MixProject do
       {:circuits_gpio, "~> 0.4"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:erlport, "~> 0.10.1"},
-      {:finch, "~> 0.6.0"},
+      {:finch, "~> 0.8.3"},
       {:hackney, "~> 1.8"},
       {:httpoison, "~> 1.6"},
       {:jason, "~> 1.2"},
