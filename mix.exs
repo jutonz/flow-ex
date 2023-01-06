@@ -34,7 +34,7 @@ defmodule Flow.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:circuits_gpio, "~> 0.4"},
+      {:circuits_gpio, "~> 1.1"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:erlport, "~> 0.10.1"},
       {:finch, "~> 0.6.0"},
